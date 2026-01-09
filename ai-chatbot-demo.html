@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Demo - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-robot"></i> AI Chatbot Demo</h1>
+                <p>Interactive AI chatbot demonstration</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div id="chatContainer" class="border rounded p-3 mb-3" style="height: 400px; overflow-y: auto; background: #f8f9fa;">
+                <div class="chat-message mb-2">
+                    <strong>Bot:</strong> Hello! I'm an AI chatbot demo. How can I help you today?
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" class="form-control" id="userInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="btn btn-primary" onclick="sendMessage()">
+                    <i class="bi bi-send"></i> Send
+                </button>
+            </div>
+
+            <div class="alert alert-info mt-3">
+                <small><strong>Note:</strong> This is a demo chatbot with predefined responses. For production, integrate with AI services like OpenAI, Google Dialogflow, or similar.</small>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const responses = {
+            'hello': 'Hello! How can I assist you today?',
+            'hi': 'Hi there! What would you like to know?',
+            'help': 'I can help you with various tasks. Try asking me about tools, features, or general questions!',
+            'tools': 'We have 100+ tools including image converters, calculators, SEO tools, text utilities, and more!',
+            'bye': 'Goodbye! Have a great day!',
+            'default': 'That\'s interesting! Can you tell me more? I\'m here to help with your questions.'
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim().toLowerCase();
+            
+            if (!message) return;
+
+            const chatContainer = document.getElementById('chatContainer');
+            
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-message mb-2 text-end';
+            userMsg.innerHTML = `<strong>You:</strong> ${input.value}`;
+            chatContainer.appendChild(userMsg);
+
+            setTimeout(() => {
+                let response = responses.default;
+                for (const key in responses) {
+                    if (message.includes(key)) {
+                        response = responses[key];
+                        break;
+                    }
+                }
+
+                const botMsg = document.createElement('div');
+                botMsg.className = 'chat-message mb-2';
+                botMsg.innerHTML = `<strong>Bot:</strong> ${response}`;
+                chatContainer.appendChild(botMsg);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 500);
+
+            input.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

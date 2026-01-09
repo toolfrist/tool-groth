@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-calendar-event"></i> Age Calculator</h1>
+                <p>Calculate your exact age in years, months, and days</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="birthDate" class="form-label">Birth Date</label>
+                <input type="date" class="form-control" id="birthDate">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="calculateAge()">
+                <i class="bi bi-calculator"></i> Calculate Age
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Your Age</h4>
+                    <p><strong>Years:</strong> <span id="years">-</span></p>
+                    <p><strong>Months:</strong> <span id="months">-</span></p>
+                    <p><strong>Days:</strong> <span id="days">-</span></p>
+                    <p><strong>Total Days:</strong> <span id="totalDays">-</span></p>
+                    <p><strong>Next Birthday:</strong> <span id="nextBirthday">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function calculateAge() {
+            const birthDate = new Date(document.getElementById('birthDate').value);
+            if (!birthDate.getTime()) {
+                alert('Please select a valid birth date');
+                return;
+            }
+            
+            const today = new Date();
+            if (birthDate > today) {
+                alert('Birth date cannot be in the future');
+                return;
+            }
+
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const diffTime = Math.abs(today - birthDate);
+            const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (nextBirthday < today) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            const daysUntilBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('totalDays').textContent = totalDays;
+            document.getElementById('nextBirthday').textContent = daysUntilBirthday + ' days';
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

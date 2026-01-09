@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF Maker - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-film"></i> GIF Maker</h1>
+                <p>Create animated GIFs from multiple images</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group">
+                <label for="imageInput" class="form-label">Select Images (Multiple)</label>
+                <input type="file" class="form-control" id="imageInput" accept="image/*" multiple>
+                <small class="text-muted">Select 2 or more images to create a GIF</small>
+            </div>
+
+            <div class="form-group">
+                <label for="delay" class="form-label">Frame Delay (ms)</label>
+                <input type="number" class="form-control" id="delay" value="500" min="50" max="5000" step="50">
+            </div>
+
+            <div id="previewContainer" class="mb-3">
+                <div id="imagePreview" class="d-flex flex-wrap gap-2"></div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="createGIF()" id="createBtn" disabled>
+                <i class="bi bi-film"></i> Create GIF
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Generated GIF</h4>
+                    <img id="gifPreview" class="img-fluid rounded mb-3">
+                    <a id="downloadLink" class="btn btn-success w-100" download="animation.gif">
+                        <i class="bi bi-download"></i> Download GIF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const delayInput = document.getElementById('delay');
+        const imagePreview = document.getElementById('imagePreview');
+        const createBtn = document.getElementById('createBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const gifPreview = document.getElementById('gifPreview');
+        const downloadLink = document.getElementById('downloadLink');
+        let imageFiles = [];
+
+        imageInput.addEventListener('change', function(e) {
+            imageFiles = Array.from(e.target.files);
+            imagePreview.innerHTML = '';
+            
+            if (imageFiles.length >= 2) {
+                createBtn.disabled = false;
+                imageFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.className = 'img-thumbnail';
+                        img.style.maxWidth = '100px';
+                        img.style.maxHeight = '100px';
+                        imagePreview.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                createBtn.disabled = true;
+                alert('Please select at least 2 images');
+            }
+        });
+
+        function createGIF() {
+            if (imageFiles.length < 2) {
+                alert('Please select at least 2 images');
+                return;
+            }
+
+            const delay = parseInt(delayInput.value) || 500;
+            const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                width: 500,
+                height: 500
+            });
+
+            let loadedImages = 0;
+            const images = [];
+
+            imageFiles.forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        images.push(img);
+                        loadedImages++;
+                        
+                        if (loadedImages === imageFiles.length) {
+                            images.forEach(img => {
+                                gif.addFrame(img, { delay: delay });
+                            });
+                            
+                            gif.on('finished', function(blob) {
+                                const url = URL.createObjectURL(blob);
+                                gifPreview.src = url;
+                                downloadLink.href = url;
+                                resultContainer.style.display = 'block';
+                            });
+                            
+                            gif.render();
+                        }
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>

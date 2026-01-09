@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Storage Converter - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-hdd"></i> Data Storage Converter</h1>
+                <p>Convert between bytes, KB, MB, GB, TB, etc.</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="bytes" class="form-label">Bytes</label>
+                        <input type="number" class="form-control" id="bytes" placeholder="0" step="1">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="kb" class="form-label">Kilobytes (KB)</label>
+                        <input type="number" class="form-control" id="kb" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="mb" class="form-label">Megabytes (MB)</label>
+                        <input type="number" class="form-control" id="mb" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gb" class="form-label">Gigabytes (GB)</label>
+                        <input type="number" class="form-control" id="gb" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="tb" class="form-label">Terabytes (TB)</label>
+                        <input type="number" class="form-control" id="tb" placeholder="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="convertAll()">
+                <i class="bi bi-arrow-left-right"></i> Convert All
+            </button>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const inputs = {
+            bytes: document.getElementById('bytes'),
+            kb: document.getElementById('kb'),
+            mb: document.getElementById('mb'),
+            gb: document.getElementById('gb'),
+            tb: document.getElementById('tb')
+        };
+
+        Object.keys(inputs).forEach(key => {
+            inputs[key].addEventListener('input', () => convertFrom(key));
+        });
+
+        function convertFrom(unit) {
+            const value = parseFloat(inputs[unit].value) || 0;
+            let bytes = 0;
+
+            switch(unit) {
+                case 'bytes': bytes = value; break;
+                case 'kb': bytes = value * 1024; break;
+                case 'mb': bytes = value * 1024 * 1024; break;
+                case 'gb': bytes = value * 1024 * 1024 * 1024; break;
+                case 'tb': bytes = value * 1024 * 1024 * 1024 * 1024; break;
+            }
+
+            inputs.bytes.value = Math.round(bytes);
+            inputs.kb.value = (bytes / 1024).toFixed(4);
+            inputs.mb.value = (bytes / (1024 * 1024)).toFixed(4);
+            inputs.gb.value = (bytes / (1024 * 1024 * 1024)).toFixed(4);
+            inputs.tb.value = (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(4);
+        }
+
+        function convertAll() {
+            if (inputs.bytes.value) convertFrom('bytes');
+            else if (inputs.kb.value) convertFrom('kb');
+            else if (inputs.mb.value) convertFrom('mb');
+            else if (inputs.gb.value) convertFrom('gb');
+            else if (inputs.tb.value) convertFrom('tb');
+        }
+    </script>
+</body>
+</html>

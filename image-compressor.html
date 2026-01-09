@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compressor - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-file-zip"></i> Image Compressor</h1>
+                <p>Compress images to reduce file size while maintaining quality</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group">
+                <label for="imageInput" class="form-label">Select Image</label>
+                <input type="file" class="form-control" id="imageInput" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label for="quality" class="form-label">Compression Quality (1-100)</label>
+                <input type="range" class="form-range" id="quality" min="1" max="100" value="80">
+                <span id="qualityValue">80</span>
+            </div>
+
+            <div id="fileInfo" class="mb-3" style="display: none;">
+                <p><strong>Original Size:</strong> <span id="originalSize"></span></p>
+            </div>
+
+            <div id="previewContainer" class="mb-3" style="display: none;">
+                <img id="previewImage" class="img-fluid rounded" style="max-height: 300px;">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="compressImage()">
+                <i class="bi bi-file-zip"></i> Compress Image
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Compressed Image</h4>
+                    <p><strong>Compressed Size:</strong> <span id="compressedSize"></span></p>
+                    <p><strong>Compression Ratio:</strong> <span id="compressionRatio"></span></p>
+                    <canvas id="resultCanvas" style="display: none;"></canvas>
+                    <a id="downloadLink" class="btn btn-success w-100" download="compressed.jpg">
+                        <i class="bi bi-download"></i> Download Compressed Image
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const qualitySlider = document.getElementById('quality');
+        const qualityValue = document.getElementById('qualityValue');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const fileInfo = document.getElementById('fileInfo');
+        const originalSize = document.getElementById('originalSize');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultCanvas = document.getElementById('resultCanvas');
+        const downloadLink = document.getElementById('downloadLink');
+        const compressedSize = document.getElementById('compressedSize');
+        const compressionRatio = document.getElementById('compressionRatio');
+        let originalFileSize = 0;
+
+        qualitySlider.addEventListener('input', function() {
+            qualityValue.textContent = this.value;
+        });
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                originalFileSize = file.size;
+                originalSize.textContent = formatFileSize(originalFileSize);
+                fileInfo.style.display = 'block';
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImage.src = event.target.result;
+                    previewContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function compressImage() {
+            const file = imageInput.files[0];
+            if (!file) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const quality = qualitySlider.value / 100;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    resultCanvas.width = img.width;
+                    resultCanvas.height = img.height;
+                    const ctx = resultCanvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    resultCanvas.toBlob(function(blob) {
+                        const compressedFileSize = blob.size;
+                        const ratio = ((1 - compressedFileSize / originalFileSize) * 100).toFixed(1);
+                        
+                        compressedSize.textContent = formatFileSize(compressedFileSize);
+                        compressionRatio.textContent = ratio + '%';
+                        
+                        const url = URL.createObjectURL(blob);
+                        downloadLink.href = url;
+                        resultContainer.style.display = 'block';
+                    }, 'image/jpeg', quality);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

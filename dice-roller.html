@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-dice-6"></i> Dice Roller</h1>
+                <p>Roll virtual dice for games and decisions</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="diceCount" class="form-label">Number of Dice</label>
+                <input type="number" class="form-control" id="diceCount" value="1" min="1" max="10">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="sides" class="form-label">Sides per Die</label>
+                <select class="form-select" id="sides">
+                    <option value="4">4-sided (D4)</option>
+                    <option value="6" selected>6-sided (D6)</option>
+                    <option value="8">8-sided (D8)</option>
+                    <option value="10">10-sided (D10)</option>
+                    <option value="12">12-sided (D12)</option>
+                    <option value="20">20-sided (D20)</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="rollDice()">
+                <i class="bi bi-dice-6"></i> Roll Dice
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Roll Results</h4>
+                    <div id="diceResults" class="mb-3"></div>
+                    <p class="mb-1"><strong>Total:</strong> <span id="total">-</span></p>
+                    <p class="mb-0"><strong>Rolls:</strong> <span id="rolls">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function rollDice() {
+            const diceCount = parseInt(document.getElementById('diceCount').value) || 1;
+            const sides = parseInt(document.getElementById('sides').value) || 6;
+
+            const results = [];
+            let total = 0;
+
+            for (let i = 0; i < diceCount; i++) {
+                const roll = Math.floor(Math.random() * sides) + 1;
+                results.push(roll);
+                total += roll;
+            }
+
+            const diceResults = document.getElementById('diceResults');
+            diceResults.innerHTML = results.map((r, i) => 
+                `<span class="badge bg-primary me-2" style="font-size: 1.2rem; padding: 0.5rem 1rem;">Die ${i + 1}: ${r}</span>`
+            ).join('');
+
+            document.getElementById('total').textContent = total;
+            document.getElementById('rolls').textContent = results.join(', ');
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

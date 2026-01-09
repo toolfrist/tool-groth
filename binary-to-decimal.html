@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary to Decimal Converter - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-0-circle"></i> Binary ↔ Decimal Converter</h1>
+                <p>Convert numbers between binary and decimal formats</p>
+            </div>
+
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label">Input</label>
+                <input type="text" class="form-control" id="inputValue" placeholder="Enter binary or decimal number">
+            </div>
+
+            <div class="btn-group w-100 mb-3" role="group">
+                <button class="btn btn-primary" onclick="toDecimal()">Binary → Decimal</button>
+                <button class="btn btn-secondary" onclick="toBinary()">Decimal → Binary</button>
+                <button class="btn btn-outline-danger" onclick="clearAll()">Clear</button>
+            </div>
+
+            <div class="result-box">
+                <h4>Result</h4>
+                <p class="mb-2"><strong>Output:</strong> <span id="outputValue">-</span></p>
+                <p class="mb-0 text-muted" id="infoText"></p>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function toDecimal() {
+            const val = document.getElementById('inputValue').value.trim();
+            if (!/^([01]+)$/.test(val)) {
+                alert('Please enter a valid binary number (0 or 1).');
+                return;
+            }
+            const dec = parseInt(val, 2);
+            document.getElementById('outputValue').textContent = dec;
+            document.getElementById('infoText').textContent = `Binary ${val} in decimal is ${dec}.`;
+        }
+        function toBinary() {
+            const val = document.getElementById('inputValue').value.trim();
+            if (val === '' || isNaN(Number(val))) {
+                alert('Please enter a valid decimal number.');
+                return;
+            }
+            const bin = (parseInt(val, 10)).toString(2);
+            document.getElementById('outputValue').textContent = bin;
+            document.getElementById('infoText').textContent = `Decimal ${val} in binary is ${bin}.`;
+        }
+        function clearAll() {
+            document.getElementById('inputValue').value = '';
+            document.getElementById('outputValue').textContent = '-';
+            document.getElementById('infoText').textContent = '';
+        }
+    </script>
+</body>
+</html>

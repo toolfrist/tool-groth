@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Cropper - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #cropContainer { position: relative; display: inline-block; }
+        #cropOverlay { position: absolute; border: 2px dashed #007bff; background: rgba(0,123,255,0.1); }
+        #cropImage { max-width: 100%; display: block; }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-crop"></i> Image Cropper</h1>
+                <p>Crop images to your desired dimensions</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group">
+                <label for="imageInput" class="form-label">Select Image</label>
+                <input type="file" class="form-control" id="imageInput" accept="image/*">
+            </div>
+
+            <div id="cropContainer" style="display: none;" class="mb-3">
+                <img id="cropImage" alt="Crop preview">
+                <div id="cropOverlay"></div>
+            </div>
+
+            <div class="row mb-3" id="cropControls" style="display: none;">
+                <div class="col-md-3">
+                    <label class="form-label">X</label>
+                    <input type="number" class="form-control" id="cropX" value="0">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Y</label>
+                    <input type="number" class="form-control" id="cropY" value="0">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Width</label>
+                    <input type="number" class="form-control" id="cropWidth">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Height</label>
+                    <input type="number" class="form-control" id="cropHeight">
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="cropImage()" id="cropBtn" style="display: none;">
+                <i class="bi bi-crop"></i> Crop Image
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Cropped Image</h4>
+                    <canvas id="resultCanvas" style="display: none;"></canvas>
+                    <a id="downloadLink" class="btn btn-success w-100" download="cropped.png">
+                        <i class="bi bi-download"></i> Download Cropped Image
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const cropContainer = document.getElementById('cropContainer');
+        const cropImage = document.getElementById('cropImage');
+        const cropOverlay = document.getElementById('cropOverlay');
+        const cropControls = document.getElementById('cropControls');
+        const cropBtn = document.getElementById('cropBtn');
+        const cropX = document.getElementById('cropX');
+        const cropY = document.getElementById('cropY');
+        const cropWidth = document.getElementById('cropWidth');
+        const cropHeight = document.getElementById('cropHeight');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultCanvas = document.getElementById('resultCanvas');
+        const downloadLink = document.getElementById('downloadLink');
+        let imageWidth = 0, imageHeight = 0;
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        imageWidth = img.width;
+                        imageHeight = img.height;
+                        cropImage.src = event.target.result;
+                        cropContainer.style.display = 'block';
+                        cropControls.style.display = 'flex';
+                        cropBtn.style.display = 'block';
+                        
+                        cropWidth.value = Math.floor(imageWidth / 2);
+                        cropHeight.value = Math.floor(imageHeight / 2);
+                        updateOverlay();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        [cropX, cropY, cropWidth, cropHeight].forEach(input => {
+            input.addEventListener('input', updateOverlay);
+        });
+
+        function updateOverlay() {
+            const x = parseInt(cropX.value) || 0;
+            const y = parseInt(cropY.value) || 0;
+            const w = parseInt(cropWidth.value) || 0;
+            const h = parseInt(cropHeight.value) || 0;
+            
+            const rect = cropImage.getBoundingClientRect();
+            const scaleX = rect.width / imageWidth;
+            const scaleY = rect.height / imageHeight;
+            
+            cropOverlay.style.left = (x * scaleX) + 'px';
+            cropOverlay.style.top = (y * scaleY) + 'px';
+            cropOverlay.style.width = (w * scaleX) + 'px';
+            cropOverlay.style.height = (h * scaleY) + 'px';
+        }
+
+        function cropImage() {
+            const file = imageInput.files[0];
+            if (!file) {
+                alert('Please select an image first');
+                return;
+            }
+
+            const x = parseInt(cropX.value) || 0;
+            const y = parseInt(cropY.value) || 0;
+            const w = parseInt(cropWidth.value) || 0;
+            const h = parseInt(cropHeight.value) || 0;
+
+            if (w <= 0 || h <= 0) {
+                alert('Please enter valid crop dimensions');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    resultCanvas.width = w;
+                    resultCanvas.height = h;
+                    const ctx = resultCanvas.getContext('2d');
+                    ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
+                    
+                    resultCanvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        downloadLink.href = url;
+                        resultContainer.style.display = 'block';
+                    }, 'image/png');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

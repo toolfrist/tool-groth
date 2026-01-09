@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Address Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-house"></i> Fake Address Generator</h1>
+                <p>Generate fake addresses for testing</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="countrySelect" class="form-label">Country</label>
+                <select class="form-select" id="countrySelect">
+                    <option value="us">United States</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="ca">Canada</option>
+                    <option value="au">Australia</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="count" class="form-label">Number of Addresses</label>
+                <input type="number" class="form-control" id="count" value="1" min="1" max="10">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generateAddresses()">
+                <i class="bi bi-house"></i> Generate Addresses
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Generated Addresses</h4>
+                    <div id="addressesOutput"></div>
+                    <button class="btn btn-success w-100 mt-3" onclick="copyToClipboard(document.getElementById('addressesOutput').textContent, this)">
+                        <i class="bi bi-clipboard"></i> Copy All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const addresses = {
+            us: {
+                streets: ['Main St', 'Oak Ave', 'Park Blvd', 'Elm St', 'Maple Dr'],
+                cities: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
+                states: ['NY', 'CA', 'IL', 'TX', 'AZ']
+            },
+            uk: {
+                streets: ['High Street', 'Church Road', 'Park Lane', 'Victoria Road', 'King Street'],
+                cities: ['London', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds'],
+                states: ['England', 'Scotland', 'Wales', 'Northern Ireland']
+            },
+            ca: {
+                streets: ['Queen St', 'King St', 'Main St', 'Church St', 'Park Ave'],
+                cities: ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa'],
+                states: ['ON', 'BC', 'QC', 'AB', 'ON']
+            },
+            au: {
+                streets: ['George St', 'King St', 'Collins St', 'Elizabeth St', 'Bourke St'],
+                cities: ['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide'],
+                states: ['NSW', 'VIC', 'QLD', 'WA', 'SA']
+            }
+        };
+
+        function generateAddresses() {
+            const country = document.getElementById('countrySelect').value;
+            const count = parseInt(document.getElementById('count').value) || 1;
+            const countryData = addresses[country];
+            const output = [];
+
+            for (let i = 0; i < count; i++) {
+                const streetNum = Math.floor(Math.random() * 9999) + 1;
+                const street = countryData.streets[Math.floor(Math.random() * countryData.streets.length)];
+                const city = countryData.cities[Math.floor(Math.random() * countryData.cities.length)];
+                const state = countryData.states[Math.floor(Math.random() * countryData.states.length)];
+                const zip = Math.floor(Math.random() * 99999) + 10000;
+
+                output.push(`${streetNum} ${street}\n${city}, ${state} ${zip}`);
+            }
+
+            document.getElementById('addressesOutput').innerHTML = 
+                output.map((addr, i) => `<p class="mb-2"><strong>Address ${i + 1}:</strong><br>${addr.replace(/\n/g, '<br>')}</p>`).join('');
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-palette"></i> Color Picker</h1>
+                <p>Pick colors and get hex, RGB, HSL codes</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="colorPicker" class="form-label">Pick a Color</label>
+                        <input type="color" class="form-control form-control-color" id="colorPicker" value="#000000">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">Preview</label>
+                        <div id="colorPreview" style="width: 100%; height: 100px; border: 2px solid #ddd; border-radius: 8px; background-color: #000000;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <h4>Color Codes</h4>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label">HEX</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="hexValue" value="#000000" readonly>
+                            <button class="btn btn-outline-secondary" onclick="copyToClipboard(document.getElementById('hexValue').value, this)">Copy</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">RGB</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="rgbValue" value="rgb(0, 0, 0)" readonly>
+                            <button class="btn btn-outline-secondary" onclick="copyToClipboard(document.getElementById('rgbValue').value, this)">Copy</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">HSL</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="hslValue" value="hsl(0, 0%, 0%)" readonly>
+                            <button class="btn btn-outline-secondary" onclick="copyToClipboard(document.getElementById('hslValue').value, this)">Copy</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">RGB Values</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="rgbValues" value="0, 0, 0" readonly>
+                            <button class="btn btn-outline-secondary" onclick="copyToClipboard(document.getElementById('rgbValues').value, this)">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const colorPicker = document.getElementById('colorPicker');
+        const colorPreview = document.getElementById('colorPreview');
+        const hexValue = document.getElementById('hexValue');
+        const rgbValue = document.getElementById('rgbValue');
+        const hslValue = document.getElementById('hslValue');
+        const rgbValues = document.getElementById('rgbValues');
+
+        colorPicker.addEventListener('input', updateColors);
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+        function updateColors() {
+            const hex = colorPicker.value;
+            colorPreview.style.backgroundColor = hex;
+            hexValue.value = hex.toUpperCase();
+            
+            const rgb = hexToRgb(hex);
+            if (rgb) {
+                rgbValue.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                rgbValues.value = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
+                
+                const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+                hslValue.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+            }
+        }
+
+        updateColors();
+    </script>
+</body>
+</html>
