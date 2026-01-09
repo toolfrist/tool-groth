@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Text Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-shuffle"></i> Random Text Generator</h1>
+                <p>Generate random text, lorem ipsum, and more</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="textType" class="form-label">Text Type</label>
+                <select class="form-select" id="textType">
+                    <option value="lorem">Lorem Ipsum</option>
+                    <option value="random">Random Words</option>
+                    <option value="paragraphs">Paragraphs</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="count" class="form-label">Count</label>
+                <input type="number" class="form-control" id="count" value="3" min="1" max="50">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generateText()">
+                <i class="bi bi-shuffle"></i> Generate Text
+            </button>
+
+            <div class="result-box">
+                <h4>Generated Text</h4>
+                <textarea id="textOutput" class="form-control result-text" rows="10" readonly></textarea>
+                <button class="btn btn-success w-100 mt-3" onclick="copyToClipboard(document.getElementById('textOutput').value, this)">
+                    <i class="bi bi-clipboard"></i> Copy
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
+        const words = ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'lazy', 'dog', 'hello', 'world', 'test', 'example'];
+
+        function generateText() {
+            const type = document.getElementById('textType').value;
+            const count = parseInt(document.getElementById('count').value) || 3;
+            let output = '';
+
+            if (type === 'lorem') {
+                for (let i = 0; i < count; i++) {
+                    output += lorem + ' ';
+                }
+            } else if (type === 'random') {
+                for (let i = 0; i < count; i++) {
+                    output += words[Math.floor(Math.random() * words.length)] + ' ';
+                }
+            } else {
+                for (let i = 0; i < count; i++) {
+                    output += lorem + '\n\n';
+                }
+            }
+
+            document.getElementById('textOutput').value = output.trim();
+        }
+
+        generateText();
+    </script>
+</body>
+</html>

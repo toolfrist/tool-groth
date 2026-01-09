@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-file-text"></i> Privacy Policy Generator</h1>
+                <p>Generate privacy policy documents</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="companyName" class="form-label">Company/Website Name</label>
+                <input type="text" class="form-control" id="companyName" placeholder="Your Company Name">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="websiteUrl" class="form-label">Website URL</label>
+                <input type="url" class="form-control" id="websiteUrl" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Contact Email</label>
+                <input type="email" class="form-control" id="email" placeholder="contact@example.com">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generatePolicy()">
+                <i class="bi bi-file-text"></i> Generate Privacy Policy
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Privacy Policy</h4>
+                    <textarea id="policyOutput" class="form-control result-text" rows="15" readonly></textarea>
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-success flex-grow-1" onclick="copyToClipboard(document.getElementById('policyOutput').value, this)">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="downloadPolicy()">
+                            <i class="bi bi-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function generatePolicy() {
+            const company = document.getElementById('companyName').value || 'Your Company';
+            const url = document.getElementById('websiteUrl').value || 'https://example.com';
+            const email = document.getElementById('email').value || 'contact@example.com';
+
+            const policy = `PRIVACY POLICY
+
+Last Updated: ${new Date().toLocaleDateString()}
+
+1. INTRODUCTION
+${company} ("we," "our," or "us") operates ${url} (the "Website"). This Privacy Policy informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Website.
+
+2. INFORMATION COLLECTION
+We collect information that you provide directly to us, including but not limited to:
+- Name and contact information
+- Email address
+- Usage data and analytics
+
+3. USE OF INFORMATION
+We use the collected information for:
+- Providing and maintaining our Website
+- Notifying you about changes to our Website
+- Providing customer support
+- Gathering analysis or valuable information
+
+4. DATA SECURITY
+We implement appropriate security measures to protect your personal information.
+
+5. CONTACT US
+If you have any questions about this Privacy Policy, please contact us at: ${email}
+
+6. CHANGES TO THIS PRIVACY POLICY
+We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.`;
+
+            document.getElementById('policyOutput').value = policy;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+
+        function downloadPolicy() {
+            const content = document.getElementById('policyOutput').value;
+            if (!content.trim()) return;
+            downloadFile(content, 'privacy-policy.txt', 'text/plain');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Certificate Checker - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-shield-check"></i> SSL Certificate Checker</h1>
+                <p>Check SSL certificate validity and details</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="domainInput" class="form-label">Domain Name</label>
+                <input type="text" class="form-control" id="domainInput" placeholder="example.com">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="checkSSL()">
+                <i class="bi bi-shield-check"></i> Check SSL Certificate
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>SSL Certificate Status</h4>
+                    <p><strong>Domain:</strong> <span id="domainResult">-</span></p>
+                    <p class="mb-0"><small class="text-muted">For detailed SSL certificate information, use online SSL checker tools.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function checkSSL() {
+            const domain = document.getElementById('domainInput').value.trim();
+            if (!domain) {
+                alert('Please enter a domain name');
+                return;
+            }
+
+            document.getElementById('domainResult').textContent = domain;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

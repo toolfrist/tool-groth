@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitemap Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-diagram-3"></i> Sitemap Generator</h1>
+                <p>Create XML sitemaps for your website</p>
+            </div>
+
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="baseUrl" class="form-label">Base URL</label>
+                <input type="url" class="form-control" id="baseUrl" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="urlList" class="form-label">URLs (one per line)</label>
+                <textarea class="form-control" id="urlList" rows="8" placeholder="/about
+/contact
+/pricing"></textarea>
+                <small class="text-muted">Relative or absolute URLs supported.</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Changefreq</label>
+                    <select id="changefreq" class="form-select">
+                        <option value="weekly" selected>weekly</option>
+                        <option value="daily">daily</option>
+                        <option value="monthly">monthly</option>
+                        <option value="yearly">yearly</option>
+                        <option value="never">never</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Priority</label>
+                    <input type="number" id="priority" class="form-control" value="0.7" min="0.0" max="1.0" step="0.1">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Lastmod</label>
+                    <input type="date" id="lastmod" class="form-control">
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generateSitemap()">
+                <i class="bi bi-diagram-3"></i> Generate Sitemap
+            </button>
+
+            <div id="resultContainer" style="display:none;">
+                <div class="result-box">
+                    <h4>XML Sitemap</h4>
+                    <textarea id="sitemapOutput" class="form-control result-text" rows="12" readonly></textarea>
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn btn-success flex-grow-1" onclick="downloadSitemap()"><i class="bi bi-download"></i> Download XML</button>
+                        <button class="btn btn-outline-secondary" onclick="copyToClipboard(document.getElementById('sitemapOutput').value, this)"><i class="bi bi-clipboard"></i> Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function makeAbsolute(base, path) {
+            if (!path) return '';
+            if (path.startsWith('http')) return path;
+            return base.replace(/\\/$/, '') + '/' + path.replace(/^\\//, '');
+        }
+
+        function generateSitemap() {
+            const base = document.getElementById('baseUrl').value.trim() || '';
+            const urls = document.getElementById('urlList').value.split(/\\n+/).map(u => u.trim()).filter(Boolean);
+            if (!urls.length) {
+                alert('Please enter at least one URL.');
+                return;
+            }
+            const changefreq = document.getElementById('changefreq').value;
+            const priority = parseFloat(document.getElementById('priority').value) || 0.7;
+            const lastmod = document.getElementById('lastmod').value;
+
+            const today = new Date().toISOString().split('T')[0];
+            const lm = lastmod || today;
+
+            let xml = '<?xml version="1.0" encoding="UTF-8"?>\\n';
+            xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n';
+
+            urls.forEach(u => {
+                xml += '  <url>\\n';
+                xml += `    <loc>${makeAbsolute(base || '', u)}</loc>\\n`;
+                xml += `    <lastmod>${lm}</lastmod>\\n`;
+                xml += `    <changefreq>${changefreq}</changefreq>\\n`;
+                xml += `    <priority>${priority.toFixed(1)}</priority>\\n`;
+                xml += '  </url>\\n';
+            });
+
+            xml += '</urlset>';
+            const output = document.getElementById('sitemapOutput');
+            output.value = xml;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+
+        function downloadSitemap() {
+            const content = document.getElementById('sitemapOutput').value;
+            if (!content.trim()) return;
+            downloadFile(content, 'sitemap.xml', 'application/xml');
+        }
+    </script>
+</body>
+</html>

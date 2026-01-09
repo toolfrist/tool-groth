@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Speed Test - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-wifi"></i> Internet Speed Test</h1>
+                <p>Test your internet connection speed</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="text-center mb-4">
+                <button class="btn btn-primary btn-lg" id="testBtn" onclick="startSpeedTest()">
+                    <i class="bi bi-play-circle"></i> Start Speed Test
+                </button>
+            </div>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Speed Test Results</h4>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="downloadSpeed">-</h5>
+                                    <p class="card-text text-muted">Download (Mbps)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="uploadSpeed">-</h5>
+                                    <p class="card-text text-muted">Upload (Mbps)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title" id="ping">-</h5>
+                                    <p class="card-text text-muted">Ping (ms)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mb-0 text-muted"><small>Note: This is a simulated speed test. For accurate results, use professional speed test services.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function startSpeedTest() {
+            document.getElementById('testBtn').disabled = true;
+            document.getElementById('testBtn').innerHTML = '<i class="bi bi-hourglass-split"></i> Testing...';
+            document.getElementById('resultContainer').style.display = 'block';
+
+            setTimeout(() => {
+                const download = (Math.random() * 100 + 10).toFixed(2);
+                const upload = (Math.random() * 50 + 5).toFixed(2);
+                const ping = Math.floor(Math.random() * 50 + 10);
+
+                document.getElementById('downloadSpeed').textContent = download;
+                document.getElementById('uploadSpeed').textContent = upload;
+                document.getElementById('ping').textContent = ping;
+
+                document.getElementById('testBtn').disabled = false;
+                document.getElementById('testBtn').innerHTML = '<i class="bi bi-arrow-clockwise"></i> Test Again';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

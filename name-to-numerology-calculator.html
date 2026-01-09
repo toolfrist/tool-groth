@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name to Numerology Calculator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-stars"></i> Name to Numerology Calculator</h1>
+                <p>Calculate numerology from names</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="nameInput" class="form-label">Enter Full Name</label>
+                <input type="text" class="form-control" id="nameInput" placeholder="John Doe">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="calculateNumerology()">
+                <i class="bi bi-stars"></i> Calculate Numerology
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Numerology Results</h4>
+                    <p><strong>Name:</strong> <span id="nameResult">-</span></p>
+                    <p><strong>Life Path Number:</strong> <span id="lifePath">-</span></p>
+                    <p><strong>Expression Number:</strong> <span id="expression">-</span></p>
+                    <p class="mb-0"><strong>Personality Number:</strong> <span id="personality">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const numerologyMap = {
+            'a': 1, 'j': 1, 's': 1,
+            'b': 2, 'k': 2, 't': 2,
+            'c': 3, 'l': 3, 'u': 3,
+            'd': 4, 'm': 4, 'v': 4,
+            'e': 5, 'n': 5, 'w': 5,
+            'f': 6, 'o': 6, 'x': 6,
+            'g': 7, 'p': 7, 'y': 7,
+            'h': 8, 'q': 8, 'z': 8,
+            'i': 9, 'r': 9
+        };
+
+        function reduceToSingleDigit(num) {
+            while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
+                num = num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+            }
+            return num;
+        }
+
+        function calculateNumerology() {
+            const name = document.getElementById('nameInput').value.trim().toLowerCase();
+            if (!name) {
+                alert('Please enter a name');
+                return;
+            }
+
+            const letters = name.replace(/[^a-z]/g, '');
+            let sum = 0;
+            for (let char of letters) {
+                sum += numerologyMap[char] || 0;
+            }
+
+            const lifePath = reduceToSingleDigit(sum);
+            const expression = reduceToSingleDigit(sum);
+            const personality = reduceToSingleDigit(sum);
+
+            document.getElementById('nameResult').textContent = document.getElementById('nameInput').value;
+            document.getElementById('lifePath').textContent = lifePath;
+            document.getElementById('expression').textContent = expression;
+            document.getElementById('personality').textContent = personality;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Zone Converter - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-clock"></i> Time Zone Converter</h1>
+                <p>Convert time between different time zones</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="fromTime" class="form-label">Time</label>
+                        <input type="datetime-local" class="form-control" id="fromTime">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="fromTZ" class="form-label">From Timezone</label>
+                        <select class="form-select" id="fromTZ">
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">EST (New York)</option>
+                            <option value="America/Los_Angeles">PST (Los Angeles)</option>
+                            <option value="Europe/London">GMT (London)</option>
+                            <option value="Asia/Tokyo">JST (Tokyo)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="toTZ" class="form-label">To Timezone</label>
+                        <select class="form-select" id="toTZ">
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">EST (New York)</option>
+                            <option value="America/Los_Angeles">PST (Los Angeles)</option>
+                            <option value="Europe/London">GMT (London)</option>
+                            <option value="Asia/Tokyo">JST (Tokyo)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="convertTime()">
+                <i class="bi bi-arrow-left-right"></i> Convert Time
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Converted Time</h4>
+                    <p class="h4" id="convertedTime">-</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function convertTime() {
+            const fromTime = document.getElementById('fromTime').value;
+            const fromTZ = document.getElementById('fromTZ').value;
+            const toTZ = document.getElementById('toTZ').value;
+
+            if (!fromTime) {
+                alert('Please select a time');
+                return;
+            }
+
+            const date = new Date(fromTime);
+            const fromDate = new Date(date.toLocaleString('en-US', { timeZone: fromTZ }));
+            const toDate = new Date(date.toLocaleString('en-US', { timeZone: toTZ }));
+            
+            const offset = toDate.getTime() - fromDate.getTime();
+            const result = new Date(date.getTime() + offset);
+
+            document.getElementById('convertedTime').textContent = 
+                result.toLocaleString('en-US', { timeZone: toTZ, dateStyle: 'full', timeStyle: 'long' });
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

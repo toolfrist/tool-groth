@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume Converter - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-droplet"></i> Volume Converter</h1>
+                <p>Convert between volume units (liters, gallons, etc.)</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="liters" class="form-label">Liters (L)</label>
+                        <input type="number" class="form-control" id="liters" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="gallons" class="form-label">US Gallons (gal)</label>
+                        <input type="number" class="form-control" id="gallons" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="milliliters" class="form-label">Milliliters (mL)</label>
+                        <input type="number" class="form-control" id="milliliters" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="cubicMeters" class="form-label">Cubic Meters (m³)</label>
+                        <input type="number" class="form-control" id="cubicMeters" placeholder="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="convertAll()">
+                <i class="bi bi-arrow-left-right"></i> Convert All
+            </button>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const inputs = {
+            liters: document.getElementById('liters'),
+            gallons: document.getElementById('gallons'),
+            milliliters: document.getElementById('milliliters'),
+            cubicMeters: document.getElementById('cubicMeters')
+        };
+
+        Object.keys(inputs).forEach(key => {
+            inputs[key].addEventListener('input', () => convertFrom(key));
+        });
+
+        function convertFrom(unit) {
+            const value = parseFloat(inputs[unit].value) || 0;
+            let liters = 0;
+
+            switch(unit) {
+                case 'liters': liters = value; break;
+                case 'gallons': liters = value * 3.78541; break;
+                case 'milliliters': liters = value / 1000; break;
+                case 'cubicMeters': liters = value * 1000; break;
+            }
+
+            inputs.liters.value = liters.toFixed(4);
+            inputs.gallons.value = (liters / 3.78541).toFixed(4);
+            inputs.milliliters.value = (liters * 1000).toFixed(4);
+            inputs.cubicMeters.value = (liters / 1000).toFixed(4);
+        }
+
+        function convertAll() {
+            if (inputs.liters.value) convertFrom('liters');
+            else if (inputs.gallons.value) convertFrom('gallons');
+            else if (inputs.milliliters.value) convertFrom('milliliters');
+            else if (inputs.cubicMeters.value) convertFrom('cubicMeters');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tip Calculator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-cash-coin"></i> Tip Calculator</h1>
+                <p>Calculate tip amounts for bills</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="billAmount" class="form-label">Bill Amount ($)</label>
+                <input type="number" class="form-control" id="billAmount" placeholder="0.00" step="0.01">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="tipPercent" class="form-label">Tip Percentage</label>
+                <input type="number" class="form-control" id="tipPercent" value="15" min="0" max="100" step="0.1">
+                <div class="btn-group w-100 mt-2" role="group">
+                    <button class="btn btn-outline-primary btn-sm" onclick="setTip(10)">10%</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="setTip(15)">15%</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="setTip(18)">18%</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="setTip(20)">20%</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="setTip(25)">25%</button>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="people" class="form-label">Number of People</label>
+                <input type="number" class="form-control" id="people" value="1" min="1">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="calculateTip()">
+                <i class="bi bi-calculator"></i> Calculate Tip
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Tip Calculation</h4>
+                    <p><strong>Bill Amount:</strong> $<span id="billResult">0.00</span></p>
+                    <p><strong>Tip Amount:</strong> $<span id="tipResult">0.00</span></p>
+                    <p><strong>Total Amount:</strong> $<span id="totalResult">0.00</span></p>
+                    <hr>
+                    <p class="mb-0"><strong>Per Person:</strong> $<span id="perPerson">0.00</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function setTip(percent) {
+            document.getElementById('tipPercent').value = percent;
+        }
+
+        function calculateTip() {
+            const bill = parseFloat(document.getElementById('billAmount').value) || 0;
+            const tipPercent = parseFloat(document.getElementById('tipPercent').value) || 0;
+            const people = parseInt(document.getElementById('people').value) || 1;
+
+            if (bill <= 0) {
+                alert('Please enter a valid bill amount');
+                return;
+            }
+
+            const tipAmount = (bill * tipPercent) / 100;
+            const total = bill + tipAmount;
+            const perPerson = total / people;
+
+            document.getElementById('billResult').textContent = bill.toFixed(2);
+            document.getElementById('tipResult').textContent = tipAmount.toFixed(2);
+            document.getElementById('totalResult').textContent = total.toFixed(2);
+            document.getElementById('perPerson').textContent = perPerson.toFixed(2);
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

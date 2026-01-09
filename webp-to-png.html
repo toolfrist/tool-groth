@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebP to PNG Converter - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-arrow-repeat"></i> WebP to PNG Converter</h1>
+                <p>Convert WebP images to PNG format</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group">
+                <label for="imageInput" class="form-label">Select WebP Image</label>
+                <input type="file" class="form-control" id="imageInput" accept="image/webp,image/*">
+            </div>
+
+            <div id="previewContainer" class="mb-3" style="display: none;">
+                <img id="previewImage" class="img-fluid rounded" style="max-height: 300px;">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="convertWebPToPNG()">
+                <i class="bi bi-download"></i> Convert to PNG
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Converted PNG Image</h4>
+                    <canvas id="resultCanvas" style="display: none;"></canvas>
+                    <a id="downloadLink" class="btn btn-success w-100" download="converted.png">
+                        <i class="bi bi-download"></i> Download PNG
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultCanvas = document.getElementById('resultCanvas');
+        const downloadLink = document.getElementById('downloadLink');
+
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    previewImage.src = event.target.result;
+                    previewContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function convertWebPToPNG() {
+            const file = imageInput.files[0];
+            if (!file) {
+                alert('Please select a WebP image first');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    resultCanvas.width = img.width;
+                    resultCanvas.height = img.height;
+                    const ctx = resultCanvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    resultCanvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        downloadLink.href = url;
+                        resultContainer.style.display = 'block';
+                    }, 'image/png');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>

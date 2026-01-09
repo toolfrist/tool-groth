@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-calculator-fill"></i> Scientific Calculator</h1>
+                <p>Advanced scientific calculator with functions</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="text" class="form-control form-control-lg text-end" id="display" value="0" readonly style="font-size: 2rem;">
+            </div>
+
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-secondary w-100" onclick="clearAll()">C</button></div>
+                <div class="col-3"><button class="btn btn-secondary w-100" onclick="clearEntry()">CE</button></div>
+                <div class="col-3"><button class="btn btn-secondary w-100" onclick="backspace()">⌫</button></div>
+                <div class="col-3"><button class="btn btn-warning w-100" onclick="appendOperator('/')">/</button></div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('sin')">sin</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('cos')">cos</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('tan')">tan</button></div>
+                <div class="col-3"><button class="btn btn-warning w-100" onclick="appendOperator('*')">×</button></div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('log')">log</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('ln')">ln</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('sqrt')">√</button></div>
+                <div class="col-3"><button class="btn btn-warning w-100" onclick="appendOperator('-')">-</button></div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendFunction('pow')">x^y</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('7')">7</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('8')">8</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('9')">9</button></div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('(')">(</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('4')">4</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('5')">5</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('6')">6</button></div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber(')')">)</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('1')">1</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('2')">2</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('3')">3</button></div>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('.')">.</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('0')">0</button></div>
+                <div class="col-3"><button class="btn btn-outline-primary w-100" onclick="appendNumber('π')">π</button></div>
+                <div class="col-3"><button class="btn btn-warning w-100" onclick="appendOperator('+')">+</button></div>
+            </div>
+            <div class="row g-2">
+                <div class="col-12"><button class="btn btn-success w-100 btn-lg" onclick="calculate()">=</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let expression = '0';
+
+        function appendNumber(num) {
+            if (expression === '0') expression = '';
+            if (num === 'π') num = Math.PI.toString();
+            expression += num;
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (op === '*') op = '*';
+            expression += ' ' + op + ' ';
+            updateDisplay();
+        }
+
+        function appendFunction(func) {
+            expression = func + '(' + expression + ')';
+            updateDisplay();
+        }
+
+        function clearAll() {
+            expression = '0';
+            updateDisplay();
+        }
+
+        function clearEntry() {
+            expression = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            expression = expression.slice(0, -1) || '0';
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('display').value = expression;
+        }
+
+        function calculate() {
+            try {
+                let result = expression
+                    .replace(/sin\(/g, 'Math.sin(')
+                    .replace(/cos\(/g, 'Math.cos(')
+                    .replace(/tan\(/g, 'Math.tan(')
+                    .replace(/log\(/g, 'Math.log10(')
+                    .replace(/ln\(/g, 'Math.log(')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/\^/g, '**');
+                
+                result = eval(result);
+                expression = result.toString();
+                updateDisplay();
+            } catch (e) {
+                alert('Invalid expression');
+                expression = '0';
+                updateDisplay();
+            }
+        }
+    </script>
+</body>
+</html>

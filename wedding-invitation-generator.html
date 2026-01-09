@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-envelope-heart"></i> Wedding Invitation Generator</h1>
+                <p>Generate beautiful wedding invitations</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="brideName" class="form-label">Bride's Name</label>
+                        <input type="text" class="form-control" id="brideName" placeholder="Jane">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="groomName" class="form-label">Groom's Name</label>
+                        <input type="text" class="form-control" id="groomName" placeholder="John">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="weddingDate" class="form-label">Wedding Date</label>
+                <input type="date" class="form-control" id="weddingDate">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="venue" class="form-label">Venue</label>
+                <input type="text" class="form-control" id="venue" placeholder="Venue name and address">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generateInvitation()">
+                <i class="bi bi-envelope-heart"></i> Generate Invitation
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box text-center">
+                    <h4>Wedding Invitation</h4>
+                    <div id="invitationPreview" class="border p-4 bg-light rounded"></div>
+                    <button class="btn btn-success w-100 mt-3" onclick="downloadInvitation()">
+                        <i class="bi bi-download"></i> Download Invitation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function generateInvitation() {
+            const bride = document.getElementById('brideName').value || 'Bride';
+            const groom = document.getElementById('groomName').value || 'Groom';
+            const date = document.getElementById('weddingDate').value || new Date().toISOString().split('T')[0];
+            const venue = document.getElementById('venue').value || 'Venue';
+
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            const invitationHTML = `
+                <h2 class="mb-4">💕 You're Invited 💕</h2>
+                <h3 class="mb-3">${bride} & ${groom}</h3>
+                <p class="h5 mb-3">are getting married!</p>
+                <hr>
+                <p class="mb-2"><strong>Date:</strong> ${formattedDate}</p>
+                <p class="mb-0"><strong>Venue:</strong> ${venue}</p>
+                <hr>
+                <p class="mb-0">We would be honored to have you celebrate with us!</p>
+            `;
+
+            document.getElementById('invitationPreview').innerHTML = invitationHTML;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+
+        function downloadInvitation() {
+            const content = document.getElementById('invitationPreview').innerHTML;
+            const html = `<!DOCTYPE html><html><head><title>Wedding Invitation</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body class="p-4">${content}</body></html>`;
+            downloadFile(html, 'wedding-invitation.html', 'text/html');
+        }
+    </script>
+</body>
+</html>

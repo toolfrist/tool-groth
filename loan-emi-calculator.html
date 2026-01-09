@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan EMI Calculator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-bank"></i> Loan EMI Calculator</h1>
+                <p>Calculate loan EMI and interest</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="loanAmount" class="form-label">Loan Amount ($)</label>
+                <input type="number" class="form-control" id="loanAmount" placeholder="0.00" step="0.01">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="interestRate" class="form-label">Annual Interest Rate (%)</label>
+                <input type="number" class="form-control" id="interestRate" placeholder="0" step="0.01">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="loanTenure" class="form-label">Loan Tenure (Years)</label>
+                <input type="number" class="form-control" id="loanTenure" placeholder="0" step="0.1">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="calculateEMI()">
+                <i class="bi bi-calculator"></i> Calculate EMI
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>EMI Calculation</h4>
+                    <p><strong>Monthly EMI:</strong> $<span id="emiAmount">0.00</span></p>
+                    <p><strong>Total Amount:</strong> $<span id="totalAmount">0.00</span></p>
+                    <p><strong>Total Interest:</strong> $<span id="totalInterest">0.00</span></p>
+                    <p class="mb-0"><strong>Number of Payments:</strong> <span id="numPayments">0</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function calculateEMI() {
+            const principal = parseFloat(document.getElementById('loanAmount').value) || 0;
+            const rate = parseFloat(document.getElementById('interestRate').value) || 0;
+            const years = parseFloat(document.getElementById('loanTenure').value) || 0;
+
+            if (principal <= 0 || rate < 0 || years <= 0) {
+                alert('Please enter valid values');
+                return;
+            }
+
+            const monthlyRate = rate / 12 / 100;
+            const numPayments = years * 12;
+            
+            const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, numPayments) / 
+                       (Math.pow(1 + monthlyRate, numPayments) - 1);
+            
+            const totalAmount = emi * numPayments;
+            const totalInterest = totalAmount - principal;
+
+            document.getElementById('emiAmount').textContent = emi.toFixed(2);
+            document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+            document.getElementById('totalInterest').textContent = totalInterest.toFixed(2);
+            document.getElementById('numPayments').textContent = numPayments;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

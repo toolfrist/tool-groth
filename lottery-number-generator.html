@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lottery Number Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-trophy"></i> Lottery Number Generator</h1>
+                <p>Generate random lottery numbers</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="lotteryType" class="form-label">Lottery Type</label>
+                <select class="form-select" id="lotteryType">
+                    <option value="powerball">Powerball (5 numbers 1-69 + 1 Powerball 1-26)</option>
+                    <option value="megamillions">Mega Millions (5 numbers 1-70 + 1 Mega Ball 1-25)</option>
+                    <option value="euro">EuroMillions (5 numbers 1-50 + 2 Lucky Stars 1-12)</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+
+            <div id="customSettings" style="display: none;" class="mb-3">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Numbers Count</label>
+                        <input type="number" class="form-control" id="numCount" value="6" min="1" max="20">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Max Number</label>
+                        <input type="number" class="form-control" id="maxNum" value="49" min="1">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generateNumbers()">
+                <i class="bi bi-trophy"></i> Generate Numbers
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box text-center">
+                    <h4>Your Lucky Numbers</h4>
+                    <div id="numbersDisplay" class="mb-3"></div>
+                    <button class="btn btn-success w-100" onclick="generateNumbers()">
+                        <i class="bi bi-arrow-clockwise"></i> Generate New Numbers
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        document.getElementById('lotteryType').addEventListener('change', function() {
+            document.getElementById('customSettings').style.display = 
+                this.value === 'custom' ? 'block' : 'none';
+        });
+
+        function generateNumbers() {
+            const type = document.getElementById('lotteryType').value;
+            let numbers = [];
+            let special = [];
+
+            if (type === 'powerball') {
+                numbers = generateUnique(5, 1, 69);
+                special = generateUnique(1, 1, 26);
+            } else if (type === 'megamillions') {
+                numbers = generateUnique(5, 1, 70);
+                special = generateUnique(1, 1, 25);
+            } else if (type === 'euro') {
+                numbers = generateUnique(5, 1, 50);
+                special = generateUnique(2, 1, 12);
+            } else {
+                const count = parseInt(document.getElementById('numCount').value) || 6;
+                const max = parseInt(document.getElementById('maxNum').value) || 49;
+                numbers = generateUnique(count, 1, max);
+            }
+
+            numbers.sort((a, b) => a - b);
+            if (special.length > 0) special.sort((a, b) => a - b);
+
+            const display = document.getElementById('numbersDisplay');
+            display.innerHTML = `
+                <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+                    ${numbers.map(n => `<span class="badge bg-primary" style="font-size: 1.5rem; padding: 0.5rem 1rem;">${n}</span>`).join('')}
+                </div>
+                ${special.length > 0 ? `
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        ${special.map(n => `<span class="badge bg-warning text-dark" style="font-size: 1.5rem; padding: 0.5rem 1rem;">${n}</span>`).join('')}
+                    </div>
+                ` : ''}
+            `;
+
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+
+        function generateUnique(count, min, max) {
+            const numbers = new Set();
+            while (numbers.size < count) {
+                numbers.add(Math.floor(Math.random() * (max - min + 1)) + min);
+            }
+            return Array.from(numbers);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML Sitemap Validator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-check-circle"></i> XML Sitemap Validator</h1>
+                <p>Validate your XML sitemap format</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="sitemapInput" class="form-label">XML Sitemap URL or Content</label>
+                <textarea class="form-control" id="sitemapInput" rows="8" placeholder="Paste XML sitemap content or URL..."></textarea>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="validateSitemap()">
+                <i class="bi bi-check-circle"></i> Validate Sitemap
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Validation Result</h4>
+                    <p id="validationResult">-</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function validateSitemap() {
+            const input = document.getElementById('sitemapInput').value.trim();
+            if (!input) {
+                alert('Please enter XML sitemap content');
+                return;
+            }
+
+            try {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(input, 'text/xml');
+                const errors = xmlDoc.getElementsByTagName('parsererror');
+                
+                if (errors.length > 0) {
+                    document.getElementById('validationResult').innerHTML = 
+                        '<span class="text-danger">✗ Invalid XML: ' + errors[0].textContent + '</span>';
+                } else {
+                    const urlset = xmlDoc.getElementsByTagName('urlset');
+                    if (urlset.length > 0) {
+                        const urls = xmlDoc.getElementsByTagName('url');
+                        document.getElementById('validationResult').innerHTML = 
+                            '<span class="text-success">✓ Valid XML Sitemap</span><br>' +
+                            '<strong>URLs found:</strong> ' + urls.length;
+                    } else {
+                        document.getElementById('validationResult').innerHTML = 
+                            '<span class="text-warning">Valid XML but may not be a sitemap</span>';
+                    }
+                }
+                document.getElementById('resultContainer').style.display = 'block';
+            } catch (e) {
+                document.getElementById('validationResult').innerHTML = 
+                    '<span class="text-danger">Error: ' + e.message + '</span>';
+                document.getElementById('resultContainer').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

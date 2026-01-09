@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Tags Extractor - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-tags"></i> YouTube Tags Extractor</h1>
+                <p>Extract tags from YouTube videos</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="videoUrl" class="form-label">YouTube Video URL</label>
+                <input type="url" class="form-control" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="extractTags()">
+                <i class="bi bi-tags"></i> Extract Tags
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Video Tags</h4>
+                    <textarea id="tagsOutput" class="form-control result-text" rows="5" readonly></textarea>
+                    <p class="mb-0 mt-2"><small class="text-muted">Note: Tag extraction requires YouTube API access. Use YouTube Data API for production.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function extractTags() {
+            const url = document.getElementById('videoUrl').value.trim();
+            if (!url) {
+                alert('Please enter a YouTube URL');
+                return;
+            }
+
+            document.getElementById('tagsOutput').value = 'Tags extraction requires YouTube API. For production, integrate with YouTube Data API v3.';
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

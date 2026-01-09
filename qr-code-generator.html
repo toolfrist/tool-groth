@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-qr-code"></i> QR Code Generator</h1>
+                <p>Generate QR codes for text, URLs, and more</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group">
+                <label for="qrText" class="form-label">Enter Text or URL</label>
+                <textarea class="form-control" id="qrText" rows="3" placeholder="Enter text, URL, or any data to encode"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="qrSize" class="form-label">Size (px)</label>
+                        <input type="number" class="form-control" id="qrSize" value="256" min="100" max="1000">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="qrColor" class="form-label">Color</label>
+                        <input type="color" class="form-control form-control-color" id="qrColor" value="#000000">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generateQR()">
+                <i class="bi bi-qr-code"></i> Generate QR Code
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box text-center">
+                    <h4>Your QR Code</h4>
+                    <div id="qrcode" class="mb-3"></div>
+                    <button class="btn btn-success w-100" onclick="downloadQR()">
+                        <i class="bi bi-download"></i> Download QR Code
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function generateQR() {
+            const text = document.getElementById('qrText').value;
+            if (!text.trim()) {
+                alert('Please enter some text or URL');
+                return;
+            }
+
+            const size = parseInt(document.getElementById('qrSize').value) || 256;
+            const color = document.getElementById('qrColor').value;
+            
+            document.getElementById('qrcode').innerHTML = '';
+            
+            new QRCode(document.getElementById('qrcode'), {
+                text: text,
+                width: size,
+                height: size,
+                colorDark: color,
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const url = canvas.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'qrcode.png';
+                a.click();
+            }
+        }
+    </script>
+</body>
+</html>

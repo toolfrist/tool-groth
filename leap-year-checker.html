@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leap Year Checker - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-calendar-event"></i> Leap Year Checker</h1>
+                <p>Check if a year is a leap year</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="year" class="form-label">Enter Year</label>
+                <input type="number" class="form-control" id="year" placeholder="e.g. 2024" min="1">
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="checkLeapYear()">
+                <i class="bi bi-check-circle"></i> Check Leap Year
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box text-center">
+                    <h4 id="resultTitle">Result</h4>
+                    <p class="h3 mb-3" id="resultText">-</p>
+                    <p class="mb-0" id="resultInfo">-</p>
+                </div>
+            </div>
+
+            <div class="result-box mt-3">
+                <h5>Leap Year Rules</h5>
+                <ul class="mb-0">
+                    <li>A year is a leap year if it is divisible by 4</li>
+                    <li>However, if it is divisible by 100, it must also be divisible by 400</li>
+                    <li>Examples: 2000 (leap), 1900 (not leap), 2024 (leap)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function checkLeapYear() {
+            const year = parseInt(document.getElementById('year').value);
+            
+            if (!year || year < 1) {
+                alert('Please enter a valid year');
+                return;
+            }
+
+            const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+            
+            const resultTitle = document.getElementById('resultTitle');
+            const resultText = document.getElementById('resultText');
+            const resultInfo = document.getElementById('resultInfo');
+
+            if (isLeap) {
+                resultTitle.textContent = 'Leap Year!';
+                resultText.textContent = year + ' is a Leap Year';
+                resultText.className = 'h3 mb-3 text-success';
+                resultInfo.textContent = `February has 29 days in ${year}`;
+            } else {
+                resultTitle.textContent = 'Not a Leap Year';
+                resultText.textContent = year + ' is not a Leap Year';
+                resultText.className = 'h3 mb-3 text-danger';
+                resultInfo.textContent = `February has 28 days in ${year}`;
+            }
+
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

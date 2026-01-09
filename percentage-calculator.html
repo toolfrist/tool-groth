@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Percentage Calculator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-percent"></i> Percentage Calculator</h1>
+                <p>Quickly compute percentages, changes, and proportions</p>
+            </div>
+
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">What is <input type="number" id="percentOf" class="form-control d-inline-block" style="width: 100%;" placeholder="e.g. 20"> % of <input type="number" id="ofValue" class="form-control d-inline-block" style="width: 100%;" placeholder="e.g. 150"></label>
+                    <button class="btn btn-primary w-100 mt-2" onclick="calcPercentOf()">Calculate</button>
+                    <p class="mt-2 mb-0"><strong>Result:</strong> <span id="percentOfResult">-</span></p>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label"><input type="number" id="partValue" class="form-control d-inline-block" style="width: 100%;" placeholder="Part value"> is what % of <input type="number" id="wholeValue" class="form-control d-inline-block" style="width: 100%;" placeholder="Whole value"></label>
+                    <button class="btn btn-secondary w-100 mt-2" onclick="calcWhatPercent()">Calculate</button>
+                    <p class="mt-2 mb-0"><strong>Result:</strong> <span id="whatPercentResult">-</span></p>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Percentage Increase</label>
+                    <input type="number" id="incFrom" class="form-control mb-2" placeholder="Original value">
+                    <input type="number" id="incTo" class="form-control mb-2" placeholder="New value">
+                    <button class="btn btn-success w-100" onclick="calcIncrease()">Compute Increase %</button>
+                    <p class="mt-2 mb-0"><strong>Result:</strong> <span id="incResult">-</span></p>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Percentage Decrease</label>
+                    <input type="number" id="decFrom" class="form-control mb-2" placeholder="Original value">
+                    <input type="number" id="decTo" class="form-control mb-2" placeholder="Reduced value">
+                    <button class="btn btn-danger w-100" onclick="calcDecrease()">Compute Decrease %</button>
+                    <p class="mt-2 mb-0"><strong>Result:</strong> <span id="decResult">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function calcPercentOf() {
+            const percent = Number(document.getElementById('percentOf').value);
+            const val = Number(document.getElementById('ofValue').value);
+            if (isNaN(percent) || isNaN(val)) { alert('Enter valid numbers'); return; }
+            const result = (percent / 100) * val;
+            document.getElementById('percentOfResult').textContent = result.toFixed(2);
+        }
+        function calcWhatPercent() {
+            const part = Number(document.getElementById('partValue').value);
+            const whole = Number(document.getElementById('wholeValue').value);
+            if (isNaN(part) || isNaN(whole) || whole === 0) { alert('Enter valid numbers (whole > 0)'); return; }
+            const result = (part / whole) * 100;
+            document.getElementById('whatPercentResult').textContent = result.toFixed(2) + '%';
+        }
+        function calcIncrease() {
+            const from = Number(document.getElementById('incFrom').value);
+            const to = Number(document.getElementById('incTo').value);
+            if (isNaN(from) || isNaN(to) || from === 0) { alert('Enter valid numbers (from > 0)'); return; }
+            const result = ((to - from) / from) * 100;
+            document.getElementById('incResult').textContent = result.toFixed(2) + '%';
+        }
+        function calcDecrease() {
+            const from = Number(document.getElementById('decFrom').value);
+            const to = Number(document.getElementById('decTo').value);
+            if (isNaN(from) || isNaN(to) || from === 0) { alert('Enter valid numbers (from > 0)'); return; }
+            const result = ((from - to) / from) * 100;
+            document.getElementById('decResult').textContent = result.toFixed(2) + '%';
+        }
+    </script>
+</body>
+</html>

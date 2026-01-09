@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Post Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-pencil-square"></i> Social Media Post Generator</h1>
+                <p>Generate engaging social media posts</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="topicInput" class="form-label">Topic/Theme</label>
+                <input type="text" class="form-control" id="topicInput" placeholder="e.g. New product launch, Travel tips">
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="platformSelect" class="form-label">Platform</label>
+                <select class="form-select" id="platformSelect">
+                    <option value="facebook">Facebook</option>
+                    <option value="twitter">Twitter</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="linkedin">LinkedIn</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generatePost()">
+                <i class="bi bi-pencil-square"></i> Generate Post
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Generated Post</h4>
+                    <textarea id="postOutput" class="form-control result-text" rows="8" readonly></textarea>
+                    <button class="btn btn-success w-100 mt-3" onclick="copyToClipboard(document.getElementById('postOutput').value, this)">
+                        <i class="bi bi-clipboard"></i> Copy Post
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        function generatePost() {
+            const topic = document.getElementById('topicInput').value.trim();
+            const platform = document.getElementById('platformSelect').value;
+
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            const templates = {
+                facebook: `🎉 Exciting news! ${topic}\n\nWe're thrilled to share this with you! Stay tuned for more updates.\n\n#${topic.replace(/\s+/g, '')} #news #update`,
+                twitter: `🚀 ${topic}\n\nExcited to share this! What do you think?\n\n#${topic.replace(/\s+/g, '')}`,
+                instagram: `✨ ${topic}\n\nWe're so excited to share this with you! 💫\n\n#${topic.replace(/\s+/g, '')} #instagood #trending`,
+                linkedin: `📢 ${topic}\n\nWe're pleased to announce this important update. Looking forward to your thoughts and feedback.\n\n#${topic.replace(/\s+/g, '')} #business #professional`
+            };
+
+            document.getElementById('postOutput').value = templates[platform] || templates.facebook;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

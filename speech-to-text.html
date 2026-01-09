@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-mic"></i> Speech-to-Text</h1>
+                <p>Convert speech to text using voice recognition</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="text-center mb-3">
+                <button class="btn btn-primary btn-lg" id="recordBtn" onclick="startRecording()">
+                    <i class="bi bi-mic"></i> Start Recording
+                </button>
+                <button class="btn btn-danger btn-lg" id="stopBtn" onclick="stopRecording()" style="display: none;">
+                    <i class="bi bi-stop"></i> Stop Recording
+                </button>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="textOutput" class="form-label">Transcribed Text</label>
+                <textarea class="form-control" id="textOutput" rows="10" readonly placeholder="Transcribed text will appear here..."></textarea>
+            </div>
+
+            <button class="btn btn-success w-100" onclick="copyToClipboard(document.getElementById('textOutput').value, this)">
+                <i class="bi bi-clipboard"></i> Copy Text
+            </button>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        let recognition;
+        let isRecording = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = function(event) {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById('textOutput').value = transcript;
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+        } else {
+            alert('Speech recognition not supported in your browser');
+        }
+
+        function startRecording() {
+            if (!recognition) return;
+            recognition.start();
+            isRecording = true;
+            document.getElementById('recordBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'inline-block';
+        }
+
+        function stopRecording() {
+            if (!recognition) return;
+            recognition.stop();
+            isRecording = false;
+            document.getElementById('recordBtn').style.display = 'inline-block';
+            document.getElementById('stopBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Converter - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-speedometer"></i> Speed Converter</h1>
+                <p>Convert between speed units (km/h, mph, m/s, etc.)</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="kmh" class="form-label">Kilometers per Hour (km/h)</label>
+                        <input type="number" class="form-control" id="kmh" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="mph" class="form-label">Miles per Hour (mph)</label>
+                        <input type="number" class="form-control" id="mph" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="ms" class="form-label">Meters per Second (m/s)</label>
+                        <input type="number" class="form-control" id="ms" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="knots" class="form-label">Knots</label>
+                        <input type="number" class="form-control" id="knots" placeholder="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="convertAll()">
+                <i class="bi bi-arrow-left-right"></i> Convert All
+            </button>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const inputs = {
+            kmh: document.getElementById('kmh'),
+            mph: document.getElementById('mph'),
+            ms: document.getElementById('ms'),
+            knots: document.getElementById('knots')
+        };
+
+        Object.keys(inputs).forEach(key => {
+            inputs[key].addEventListener('input', () => convertFrom(key));
+        });
+
+        function convertFrom(unit) {
+            const value = parseFloat(inputs[unit].value) || 0;
+            let ms = 0;
+
+            switch(unit) {
+                case 'kmh': ms = value / 3.6; break;
+                case 'mph': ms = value * 0.44704; break;
+                case 'ms': ms = value; break;
+                case 'knots': ms = value * 0.514444; break;
+            }
+
+            inputs.ms.value = ms.toFixed(4);
+            inputs.kmh.value = (ms * 3.6).toFixed(4);
+            inputs.mph.value = (ms / 0.44704).toFixed(4);
+            inputs.knots.value = (ms / 0.514444).toFixed(4);
+        }
+
+        function convertAll() {
+            if (inputs.kmh.value) convertFrom('kmh');
+            else if (inputs.mph.value) convertFrom('mph');
+            else if (inputs.ms.value) convertFrom('ms');
+            else if (inputs.knots.value) convertFrom('knots');
+        }
+    </script>
+</body>
+</html>

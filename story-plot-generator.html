@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Plot Generator - MultiTools Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    <div class="container my-5">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="bi bi-book"></i> Story Plot Generator</h1>
+                <p>Generate creative story plots and ideas</p>
+            </div>
+            
+            <div class="ad-placeholder bg-secondary p-2 rounded mb-4 text-center">
+                <small class="text-muted">Advertisement</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="genreSelect" class="form-label">Genre</label>
+                <select class="form-select" id="genreSelect">
+                    <option value="fantasy">Fantasy</option>
+                    <option value="sci-fi">Science Fiction</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="horror">Horror</option>
+                    <option value="adventure">Adventure</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary w-100 mb-3" onclick="generatePlot()">
+                <i class="bi bi-book"></i> Generate Story Plot
+            </button>
+
+            <div id="resultContainer" style="display: none;">
+                <div class="result-box">
+                    <h4>Story Plot</h4>
+                    <div id="plotOutput"></div>
+                    <button class="btn btn-success w-100 mt-3" onclick="generatePlot()">
+                        <i class="bi bi-arrow-clockwise"></i> Generate New Plot
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="common.js"></script>
+    <script>
+        const plots = {
+            fantasy: [
+                'A young mage discovers an ancient artifact that holds the key to restoring magic to a dying world.',
+                'A group of adventurers must unite the warring kingdoms before an ancient evil awakens.',
+                'A princess discovers she is the last descendant of dragons and must choose between her kingdom and her true nature.'
+            ],
+            'sci-fi': [
+                'A space explorer finds a derelict ship with technology that could save Earth, but using it might destroy another civilization.',
+                'In 2087, humans discover they are not alone, but the aliens have been watching for centuries.',
+                'A time traveler must prevent a catastrophic event, but each attempt creates new problems.'
+            ],
+            mystery: [
+                'A detective investigates a series of murders that seem impossible, leading to a conspiracy spanning decades.',
+                'A small town is shaken when a long-buried secret resurfaces, connecting seemingly unrelated events.',
+                'An amateur sleuth discovers that the victim was not who they appeared to be, uncovering a web of lies.'
+            ],
+            romance: [
+                'Two rivals are forced to work together and discover their animosity masks a deeper attraction.',
+                'A chance encounter leads to a whirlwind romance, but their pasts threaten to tear them apart.',
+                'Childhood friends reunite after years apart, but timing and circumstances complicate their feelings.'
+            ],
+            horror: [
+                'A family moves into their dream home, unaware it was built on an ancient burial ground.',
+                'A group of friends on a camping trip discover they are not alone in the woods.',
+                'A cursed object brings nightmares to life, and the only way to stop it is to find its origin.'
+            ],
+            adventure: [
+                'A treasure map leads to an uncharted island, but the real treasure is not what was expected.',
+                'A group of explorers must survive in a lost world where dinosaurs still roam.',
+                'An archaeologist discovers a hidden city that holds secrets that could change history.'
+            ]
+        };
+
+        function generatePlot() {
+            const genre = document.getElementById('genreSelect').value;
+            const genrePlots = plots[genre] || plots.fantasy;
+            const plot = genrePlots[Math.floor(Math.random() * genrePlots.length)];
+
+            document.getElementById('plotOutput').innerHTML = `
+                <p class="h5 mb-3">${plot}</p>
+                <p class="mb-0"><strong>Genre:</strong> ${genre.charAt(0).toUpperCase() + genre.slice(1)}</p>
+            `;
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
